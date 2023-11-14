@@ -2,6 +2,8 @@ package com.example.pdvapp.controller;
 
 import com.example.pdvapp.dto.SaleDTO;
 import com.example.pdvapp.entity.Sale;
+import com.example.pdvapp.exception.InvalidOperationException;
+import com.example.pdvapp.exception.NoItemException;
 import com.example.pdvapp.repository.SaleRepository;
 import com.example.pdvapp.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,11 @@ public class SaleController {
 
     @GetMapping("{id}")
     public ResponseEntity getById(@PathVariable long id){
-        return new ResponseEntity(saleService.findById(id), HttpStatus.OK);
+        try {
+            return new ResponseEntity(saleService.findById(id), HttpStatus.OK);
+        } catch(NoItemException error) {
+            return new ResponseEntity(error.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping()
@@ -34,6 +40,8 @@ public class SaleController {
         try {
             long id = saleService.save(saleDTO);
             return new ResponseEntity("Venda Realizada com Sucesso!! " + id, HttpStatus.CREATED);
+        } catch(NoItemException | InvalidOperationException error){
+            return new ResponseEntity(error.getMessage(), HttpStatus.BAD_REQUEST);
         } catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

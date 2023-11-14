@@ -1,6 +1,8 @@
 package com.example.pdvapp.controller;
 
+import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.dto.SaleDTO;
+import com.example.pdvapp.dto.SaleInfoDTO;
 import com.example.pdvapp.entity.Sale;
 import com.example.pdvapp.exception.InvalidOperationException;
 import com.example.pdvapp.exception.NoItemException;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/sale")
@@ -23,7 +27,7 @@ public class SaleController {
 
     @GetMapping()
     public ResponseEntity getAll(){
-        return new ResponseEntity(saleService.findAll(), HttpStatus.OK);
+        return new ResponseEntity(new ResponseDTO<List<SaleInfoDTO>>("", saleService.findAll()), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

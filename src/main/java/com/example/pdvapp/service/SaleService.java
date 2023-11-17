@@ -17,9 +17,12 @@ import com.example.pdvapp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,22 +49,25 @@ public class SaleService {
 
     }
 
-    private SaleInfoDTO getSaleInfo(Sale sale) {
-        SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
-        saleInfoDTO.setUser(sale.getUser().getName());
-        saleInfoDTO.setData(sale.getSaleDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        saleInfoDTO.setProducts(getProductInfo(sale.getItemSales()));
-
-        return saleInfoDTO;
+    private SaleInfoDTO getSaleInfo(Sale sale){
+        return SaleInfoDTO.builder()
+                .user(sale.getUser().getName())
+                .data(sale.getSaleDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .products(getProductInfo(sale.getItemSales()))
+                .build();
     }
 
     private List<ProductInfoDTO> getProductInfo(List<ItemSale> itens) {
+        if(CollectionUtils.isEmpty(itens)){
+            return Collections.emptyList();
+        }
         return itens.stream().map(itemSale -> {
-            ProductInfoDTO productInfoDTO = new ProductInfoDTO();
-            productInfoDTO.setDescription(itemSale.getProduct().getDescription());
-            productInfoDTO.setQuantity(itemSale.getQuantity());
 
-            return productInfoDTO;
+            return ProductInfoDTO.builder()
+                    .id(itemSale.getId())
+                    .quantity(itemSale.getQuantity())
+                    .description(itemSale.getProduct().getDescription())
+                    .build();
         }).collect(Collectors.toList());
     }
 
@@ -94,7 +100,8 @@ public class SaleService {
             throw new InvalidOperationException("Não é possivel realizar uma venda sem produtos!!");
         }
         return products.stream().map(item -> {
-            Product product = productRepository.getReferenceById(item.getProductId());
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new NoItemException("Não Esxistem produtos com esse id"));
 
             ItemSale itemSale = new ItemSale();
             itemSale.setProduct(product);

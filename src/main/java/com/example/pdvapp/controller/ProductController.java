@@ -1,5 +1,6 @@
 package com.example.pdvapp.controller;
 
+import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.entity.Product;
 import com.example.pdvapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +27,29 @@ public class ProductController {
 
     @PostMapping()
     public ResponseEntity create(@RequestBody Product product){
-        return new ResponseEntity<>(productRepository.save(product), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(productRepository.save(product), HttpStatus.CREATED);
+        }catch (Exception error){
+            return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping()
     public ResponseEntity update(@RequestBody Product product){
-        Product productAchado = productRepository.findById(product.getId()).orElse(null);
-
-        if(productAchado != null){
-            productRepository.save(product);
-            return new ResponseEntity(product, HttpStatus.OK);
-        } else {
-            return new ResponseEntity("Produto não encontrado!!!", HttpStatus.NOT_FOUND);
+        try{
+           return new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
+        }catch (Exception error){
+            return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable long id){
-        productRepository.deleteById(id);
-        return new ResponseEntity("Produto Deletado Com Sucesso!!!", HttpStatus.OK);
+        try {
+            productRepository.deleteById(id);
+            return new ResponseEntity(new ResponseDTO("Produto Deletado Com Sucesso!!!"), HttpStatus.OK);
+        } catch (Exception error){
+            return new ResponseEntity(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -1,23 +1,26 @@
 package com.example.pdvapp.controller;
 
+import com.example.pdvapp.dto.ProductDTO;
 import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.entity.Product;
 import com.example.pdvapp.repository.ProductRepository;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
     private ProductRepository productRepository;
+    private ModelMapper mapper;
 
     public ProductController(@Autowired ProductRepository productRepository) {
         this.productRepository = productRepository;
+        this.mapper= new ModelMapper();
     }
 
     @GetMapping()
@@ -26,18 +29,19 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity create(@RequestBody Product product){
+    public ResponseEntity create(@Valid @RequestBody ProductDTO productDTO){
         try {
-            return new ResponseEntity<>(productRepository.save(product), HttpStatus.CREATED);
+
+            return new ResponseEntity<>(productRepository.save(mapper.map(productDTO, Product.class)), HttpStatus.CREATED);
         }catch (Exception error){
             return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping()
-    public ResponseEntity update(@RequestBody Product product){
+    public ResponseEntity update(@Valid @RequestBody ProductDTO productDTO){
         try{
-           return new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
+           return new ResponseEntity<>(productRepository.save(mapper.map(productDTO, Product.class)), HttpStatus.OK);
         }catch (Exception error){
             return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
         }

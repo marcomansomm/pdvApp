@@ -2,19 +2,13 @@ package com.example.pdvapp.controller;
 
 import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.dto.SaleDTO;
-import com.example.pdvapp.dto.SaleInfoDTO;
-import com.example.pdvapp.entity.Sale;
-import com.example.pdvapp.exception.InvalidOperationException;
-import com.example.pdvapp.exception.NoItemException;
-import com.example.pdvapp.repository.SaleRepository;
 import com.example.pdvapp.service.SaleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/sale")
@@ -40,7 +34,7 @@ public class SaleController {
     }
 
     @PostMapping()
-    public ResponseEntity create(@RequestBody SaleDTO saleDTO){
+    public ResponseEntity create(@Valid @RequestBody SaleDTO saleDTO){
         try {
             long id = saleService.save(saleDTO);
             return new ResponseEntity<>(new ResponseDTO("Venda Realizada com Sucesso!! "), HttpStatus.CREATED);

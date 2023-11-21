@@ -2,9 +2,8 @@ package com.example.pdvapp.controller;
 
 import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.dto.UserDTO;
-import com.example.pdvapp.entity.User;
-import com.example.pdvapp.exception.NoItemException;
 import com.example.pdvapp.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity createUser(@RequestBody User user){
+    public ResponseEntity createUser(@Valid @RequestBody UserDTO user){
         try{
             return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
         } catch(Exception e) {
@@ -36,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity updateUser(@RequestBody User userAtualizado) {
+    public ResponseEntity updateUser(@Valid @RequestBody UserDTO userAtualizado) {
         try{
             return new ResponseEntity<>(userService.update(userAtualizado), HttpStatus.OK);
         } catch (Exception error) {

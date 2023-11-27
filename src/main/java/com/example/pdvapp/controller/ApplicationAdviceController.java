@@ -3,8 +3,10 @@ package com.example.pdvapp.controller;
 import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.exception.InvalidOperationException;
 import com.example.pdvapp.exception.NoItemException;
+import com.example.pdvapp.exception.PasswordNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,6 +30,18 @@ public class ApplicationAdviceController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseDTO handlerInvalidOperationException(InvalidOperationException exception){
         String messageError = exception.getMessage();
+        return new ResponseDTO(exception.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseDTO handlerUsernameNotFoundException(UsernameNotFoundException exception) {
+        return new ResponseDTO(exception.getMessage());
+    }
+
+    @ExceptionHandler(PasswordNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseDTO handlerPasswordNotFoundException(PasswordNotFoundException exception) {
         return new ResponseDTO(exception.getMessage());
     }
 

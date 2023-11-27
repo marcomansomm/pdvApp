@@ -1,11 +1,9 @@
 package com.example.pdvapp.dto;
 
-import com.example.pdvapp.entity.User;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,8 +11,11 @@ import java.util.List;
 public class UserDTO {
 
     private long id;
+    @NotBlank(message = "Campo nome é obrigatorio!!")
     private String name;
+    @NotBlank(message = "Campo username é obrigatorio!!")
     private String username;
+    @NotBlank(message = "Campo password é obrigatorio!!")
     private String password;
     private boolean enable;
 

@@ -4,7 +4,7 @@ import com.example.pdvapp.dto.ProductDTO;
 import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.entity.Product;
 import com.example.pdvapp.repository.ProductRepository;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

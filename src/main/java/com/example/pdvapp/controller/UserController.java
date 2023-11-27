@@ -3,7 +3,7 @@ package com.example.pdvapp.controller;
 import com.example.pdvapp.dto.ResponseDTO;
 import com.example.pdvapp.dto.UserDTO;
 import com.example.pdvapp.service.UserService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

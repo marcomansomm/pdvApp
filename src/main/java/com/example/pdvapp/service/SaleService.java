@@ -14,7 +14,7 @@ import com.example.pdvapp.repository.ItemSaleRepository;
 import com.example.pdvapp.repository.ProductRepository;
 import com.example.pdvapp.repository.SaleRepository;
 import com.example.pdvapp.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

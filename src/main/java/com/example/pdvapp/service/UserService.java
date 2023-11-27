@@ -1,6 +1,7 @@
 package com.example.pdvapp.service;
 
 import com.example.pdvapp.dto.UserDTO;
+import com.example.pdvapp.dto.UserResponseDTO;
 import com.example.pdvapp.entity.User;
 import com.example.pdvapp.exception.NoItemException;
 import com.example.pdvapp.repository.UserRepository;
@@ -25,11 +26,11 @@ public class UserService {
         this.mapper = new ModelMapper();
     }
 
-    public List<UserDTO> findAll(){
+    public List<UserResponseDTO> findAll(){
         return userRepository.findAll().stream().map( user -> {
 
 
-            return new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.isEnable());
+            return new UserResponseDTO(user.getId(), user.getName(), user.getUsername(), user.isEnable());
 
         }).collect(Collectors.toList());
 
@@ -71,5 +72,9 @@ public class UserService {
     public void deleteById(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoItemException("Usuario a ser deletado não existe"));
         userRepository.deleteById(id);
+    }
+
+    public User getByUsername(String username){
+        return userRepository.findByUsername(username);
     }
 }

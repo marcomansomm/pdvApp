@@ -1,8 +1,7 @@
 package com.example.pdvapp.entity;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import javax.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -12,20 +11,19 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user")
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(length = 100,nullable = false)
-    @NotBlank(message = "Campo nome é obrigatorio!!")
     private String name;
-    @Column(length = 30, nullable = false)
-    @NotBlank(message = "Campo Username é obrigatorio!!")
+    @Column(length = 30, nullable = false, unique = true)
     private String username;
-    @NotBlank(message = "Campo senha é obrigatorio!!")
+    @Column(length = 60, nullable = false)
     private String password;
     private boolean isEnable;
     @OneToMany(mappedBy = "user")
     private List<Sale> sales;
+
 }

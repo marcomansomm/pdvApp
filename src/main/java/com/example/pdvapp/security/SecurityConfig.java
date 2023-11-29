@@ -48,7 +48,7 @@ public class SecurityConfig{
                 .sessionManagement()
                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                  .and()
-                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
          return http.build();
     }
@@ -74,6 +74,7 @@ public class SecurityConfig{
     }
 
     public OncePerRequestFilter jwtFilter(){
+        System.out.println("Cheguei aqui!!!!!!!!!!");
         return new JwtAuthFilter(jwtService, customUserDetailService);
     }
 }

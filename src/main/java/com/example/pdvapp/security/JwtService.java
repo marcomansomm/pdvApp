@@ -1,5 +1,6 @@
 package com.example.pdvapp.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,12 +19,16 @@ public class JwtService {
     @Value("${security.jwt.key}")
     private String key;
 
+    private SecretKey getSecretKey(){
+        return Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
+    }
+
     public String generateToken(String username){
         Calendar currentTimeNow = Calendar.getInstance();
         currentTimeNow.add(Calendar.MINUTE, expiration);
         Date expirationDate = currentTimeNow.getTime();
 
-        SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
+        SecretKey secretKey = getSecretKey();
 
         String token = Jwts.builder()
                 .setSubject(username)
@@ -33,4 +38,18 @@ public class JwtService {
 
         return token;
     }
+    private Claims getClaims(String token){
+        SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
+
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
+
 }
